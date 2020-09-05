@@ -1,12 +1,25 @@
 package com.ericflorin.medhacks2020;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.sendbird.android.BaseMessage;
+import com.sendbird.android.SendBird;
+import com.sendbird.android.UserMessage;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
+
 
 public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -85,8 +98,23 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
-            timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
+            timeText.setText(getRelativeTimeAgo(message.getCreatedAt()));
+//            timeText.setText(DateUtils.formatDateTime(mContext, message.getCreatedAt()));
         }
+    }
+
+    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+    public static String getRelativeTimeAgo(long dateMillis) {
+//        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+//        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+//        sf.setLenient(true);
+
+        String relativeDate = "";
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+
+
+        return relativeDate;
     }
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
@@ -106,12 +134,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
-            timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
+            timeText.setText(getRelativeTimeAgo(message.getCreatedAt()));
 
             nameText.setText(message.getSender().getNickname());
 
             // Insert the profile image from the URL into the ImageView.
-            Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);
+            Glide.with(mContext).load(message.getSender().getProfileUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profileImage);
         }
     }
 }
