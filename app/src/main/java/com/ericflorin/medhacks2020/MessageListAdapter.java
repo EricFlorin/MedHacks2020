@@ -99,16 +99,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
             // Format the stored timestamp into a readable String using method.
             timeText.setText(getRelativeTimeAgo(message.getCreatedAt()));
-//            timeText.setText(DateUtils.formatDateTime(mContext, message.getCreatedAt()));
         }
     }
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     public static String getRelativeTimeAgo(long dateMillis) {
-//        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-//        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-//        sf.setLenient(true);
-
         String relativeDate = "";
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();

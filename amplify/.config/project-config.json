@@ -1,0 +1,13 @@
+{
+  "projectName": "MedHacks2020",
+  "version": "3.0",
+  "frontend": "android",
+  "android": {
+    "config": {
+      "ResDir": "app/src/main/res"
+    }
+  },
+  "providers": [
+    "awscloudformation"
+  ]
+}
