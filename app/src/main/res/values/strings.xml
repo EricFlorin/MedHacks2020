@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">MedHacks2020</string>
-    <string name="accessKey">AKIAYEVMOHTSXG5MOZXF</string>
-    <string name="secretKey">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</string>
     <string name="botname">ScheduleAppointment</string>
     <string name="userid">testuser</string>
 </resources>
