@@ -9,26 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.sendbird.android.BaseMessage;
-import com.sendbird.android.SendBird;
-import com.sendbird.android.UserMessage;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 
-public class MessageListAdapter extends RecyclerView.Adapter {
+public class MessageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     private Context mContext;
-    private List<BaseMessage> mMessageList;
+    private List<Message> mMessageList;
 
-    public MessageListAdapter(Context context, List<BaseMessage> messageList) {
+    public MessageListAdapter(Context context, List<Message> messageList) {
         mContext = context;
         mMessageList = messageList;
     }
@@ -41,9 +33,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
-        UserMessage message = (UserMessage) mMessageList.get(position);
+        Message message = mMessageList.get(position);
 
-        if (message.getSender().getUserId().equals(SendBird.getCurrentUser().getUserId())) {
+        if (message.getSender().getUserId().equals(mContext.getResources().getString(R.string.userid)))
+        {
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
@@ -73,7 +66,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Passes the message object to a ViewHolder so that the contents can be bound to UI.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        UserMessage message = (UserMessage) mMessageList.get(position);
+        Message message = mMessageList.get(position);
 
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
@@ -83,6 +76,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 ((ReceivedMessageHolder) holder).bind(message);
         }
     }
+
+
 
     private class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText;
@@ -94,7 +89,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             timeText = (TextView) itemView.findViewById(R.id.text_message_time);
         }
 
-        void bind(UserMessage message) {
+        void bind(Message message) {
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
@@ -125,18 +120,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
         }
 
-        void bind(UserMessage message) {
+        void bind(Message message) {
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
             timeText.setText(getRelativeTimeAgo(message.getCreatedAt()));
 
             nameText.setText(message.getSender().getNickname());
-
-            // Insert the profile image from the URL into the ImageView.
-            Glide.with(mContext).load(message.getSender().getProfileUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(profileImage);
         }
     }
 }
